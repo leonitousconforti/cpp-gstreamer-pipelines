@@ -1,16 +1,3 @@
-# cpp gstreamer pipelines
-
-Create c++ OpenCV compatible gstreamer pipelines with fine tuned control.
-
-## Features
-
--   No OpenCV dependencies
--   Single Header-only library
--   Fine tuned control of how opencv will receive the stream
-
-## C++ Example
-
-```cpp
 #include <iostream>
 
 #include "gstreamer_pipelines.hpp"
@@ -73,11 +60,3 @@ int main()
     cv::destroyAllWindows();
     return 0;
 }
-
-```
-
-### Compile Example File
-
-```sh
-g++ example.cpp -o example -std=c++11 -l `pkg-config --cflags --libs opencv4`
-```
