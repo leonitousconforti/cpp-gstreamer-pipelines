@@ -6,7 +6,7 @@
 int main()
 {
     // Make the pipeline object with the streamer
-    OpencvGStreamerPipeline opencvGSpipeline("nvcamerasrc");
+    OpencvGStreamerPipeline opencvGSpipeline("nvarguscamerasrc");
     // Add a first source to process the streamer
     opencvGSpipeline.addSource(
         "video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, "
@@ -26,7 +26,7 @@ int main()
 
     // Get the pipeline string to pass to opencv
     std::string GSpipeline = opencvGSpipeline.getPipelineString();
-    std::cout << "G streamer pipeline is: " << GSpipeline << std::endl;
+    std::cout << "G-Streamer pipeline is: " << GSpipeline << std::endl;
 
     // Opencv capture
     cv::VideoCapture cap(GSpipeline, cv::CAP_GSTREAMER);
