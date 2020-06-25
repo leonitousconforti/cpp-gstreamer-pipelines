@@ -1,16 +1,31 @@
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "gstreamer_pipelines.hpp"
 #include <opencv2/opencv.hpp>
+
+// Global recording variables
+constexpr int capture_width{1280};
+constexpr int capture_height{720};
+constexpr int framerate{120};
+constexpr int flip_method{0};
+
+// GStreamer pipeline settings
+const std::vector<std::string> streamerSourceParams =
+{
+    "video/x-raw(memory:NVMM)",
+    "width=(int)" + std::to_string(capture_width),
+    "height=(int)" + std::to_string(capture_height),
+    "format=(string)NV12",
+    "framerate=(fraction)" + std::to_string(framerate) + "/1"
+};
 
 int main()
 {
     // Make the pipeline object with the streamer
     OpencvGStreamerPipeline opencvGSpipeline("nvarguscamerasrc");
-    // Add a first source to process the streamer
-    opencvGSpipeline.addSource(
-        "video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, "
-        "format=(string)I420, framerate=(fraction)30/1");
+    opencvGSpipeline.setStreamerSettings(streamerSourceParams);
 
     // Add a sink and a source to process the sink
     opencvGSpipeline.addSink("nvvidconv");
@@ -20,9 +35,6 @@ int main()
     std::string secondSink = "videoconvert";
     std::string secondSource = "video/x-raw, format=(string)BGR";
     opencvGSpipeline.addElement(secondSink, secondSource);
-
-    // Add the final appSink for opencv
-    opencvGSpipeline.addSink("appsink");
 
     // Get the pipeline string to pass to opencv
     std::string GSpipeline = opencvGSpipeline.getPipelineString();
@@ -50,7 +62,7 @@ int main()
         }
 
         cv::imshow("CSI Camera", frame);
-        int keycode = cv::waitKey(30) & 0xff;
+        int keycode = cv::waitKey(20) & 0xff;
         if (keycode == 27)
             break;
     }

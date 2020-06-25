@@ -28,6 +28,7 @@ SOFTWARE.
 #pragma once
 
 #include <string>
+#include <vector>
 
 class OpencvGStreamerPipeline
 {
@@ -36,6 +37,7 @@ class OpencvGStreamerPipeline
     virtual ~OpencvGStreamerPipeline();
     std::string getPipelineString();
 
+    void setStreamerSettings(std::vector<std::string> settings);
     void addSink(std::string sink);
     void addSource(std::string source);
     void addElement(std::string sink, std::string source);
@@ -53,7 +55,19 @@ OpencvGStreamerPipeline::~OpencvGStreamerPipeline() {}
 
 std::string OpencvGStreamerPipeline::getPipelineString()
 {
-    return pipeline;
+    return (pipeline + " ! appsink");
+}
+
+void OpencvGStreamerPipeline::setStreamerSettings(
+    std::vector<std::string> settings)
+{
+    std::string params = "";
+    for (const auto &piece : settings)
+        params += (piece + ", ");
+
+    params.pop_back();
+    params.pop_back();
+    addSource(params);
 }
 
 void OpencvGStreamerPipeline::addSink(std::string sink)
